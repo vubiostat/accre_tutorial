@@ -1,0 +1,25 @@
+  ###########################################################################
+ ##
+## This is the principal / source that starts the simulation
+## This can call out and source any number of things. 
+##
+## Our simulation will focus on adding it's design
+## parameters together
+##
+
+source('design.R') # Design from a consistent source
+# source('the_real_work.R') # <==== MODIFY HERE to load the real work
+simulation <- function(x)
+{
+  # For educational purposes, array job 12 will crash
+  if(x == 12) stop("SOMETHING WENT HORRIBLY WRONG!")
+
+  # Get the simulation design for this batch array
+  design <- simulation_design[x,]
+
+  # Add it up (this would be the actual simulation call for ones research)
+  result <- rowSums(design)  # <==== MODIFY HERE to call real work function
+
+  # Save the result
+  save(result, file.path("output", paste0("result-", formatC(x, width=4, format='d', flag='0'))))
+}
