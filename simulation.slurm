@@ -18,10 +18,10 @@
 
 # Load require modules to run on ACCRE
 module purge
-module GCC/6.4.0-2.28 
-module OpenMPI/2.1.1
-module Intel/2017.4.196
-module IntelMPI/2017.3.196
+module load GCC/6.4.0-2.28 
+module load OpenMPI/2.1.1
+module load Intel/2017.4.196
+module load IntelMPI/2017.3.196
 module load R/3.4.3
 
 Rscript --no-save sim-accre.R ${SLURM_ARRAY_TASK_ID}
