@@ -264,8 +264,8 @@ fixed.
 Assuming that was done, one can pull the results locally using `scp`.
 
 ```
-garbetsp:~/Projects/french/accre_tutorial$ scp -r login.accre.vanderbilt.edu:accre_tutorial/output .
-garbetsp@login.accre.vanderbilt.edu's password: 
+vunetid:~/Projects/french/accre_tutorial$ scp -r login.accre.vanderbilt.edu:accre_tutorial/output .
+vunetid@login.accre.vanderbilt.edu's password: 
 result-0001.Rdata                                      100%   85     1.7KB/s   00:00    
 result-0002.Rdata                                      100%   85     0.7KB/s   00:00    
 result-0004.Rdata                                      100%   85     1.8KB/s   00:00    
@@ -285,7 +285,7 @@ result-0013.Rdata                                      100%   86     1.7KB/s   0
 result-0011.Rdata                                      100%   86     1.8KB/s   00:00    
 result-0019.Rdata                                      100%   86     1.7KB/s   00:00    
 result-0020.Rdata                                      100%   86     1.6KB/s   00:00    
-garbetsp:~/Projects/french/accre_tutorial$ ls output
+vunetid:~/Projects/french/accre_tutorial$ ls output
 result-0001.Rdata  result-0006.Rdata  result-0011.Rdata  result-0017.Rdata
 result-0002.Rdata  result-0007.Rdata  result-0013.Rdata  result-0018.Rdata
 result-0003.Rdata  result-0008.Rdata  result-0014.Rdata  result-0019.Rdata
