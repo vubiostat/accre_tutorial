@@ -54,3 +54,4 @@ output/
 status/
 
 *.Rproj
+*.log

@@ -15,6 +15,15 @@ source('design.R') # Design from a consistent source
 
 # source('the_real_work.R') # <==== MODIFY HERE to load the real work
 
+# Silly example, DELETE for doing real work. Prefered to load from
+# external R file for a real project
+add_it_up <- function(design)
+{
+  rnorm(1e6)  # Chew up some CPU for demonstration
+
+  rowSums(design)
+}
+
   ###########################################################################
  ##
 ## Create directories if they don't exist
@@ -35,7 +44,7 @@ simulation <- function(x)
   design <- simulation_design[x,]
 
   # Add it up (this would be the actual simulation call for ones research)
-  result <- rowSums(design)  # <==== MODIFY HERE to call real work function
+  result <- add_it_up(design)  # <==== MODIFY HERE to call real work function
 
   # Save the result
   save(result, file=file.path(
