@@ -212,3 +212,123 @@ After waiting a few minutes, most of the jobs will be done.
 ```
 
 Now we can check to see how successful this was. 
+
+```
+[vunetid@gw346 accre_tutorial]$ cd status
+[vunetid@gw346 status]$ grep -i error *
+job12.out:Error in simulation(x) : SOMETHING WENT HORRIBLY WRONG!
+[vunetid@gw346 status]$ less job12.out # examines full log
+```
+
+Sure enough one of the jobs contained an error. Let's run that locally and
+see if we can recreate it. Jumping back to a local terminal and
+editing sim-local.R, this line:
+
+```
+mclapply(12:13,         # <=== MODIFY HERE Batch Array numbers to run locally
+         mc.cores=8,
+```
+
+This says we will rerun 12 and 13 locally. But this is for doing multiple batches. A more direct debug session would be as follows:
+
+```
+vunetid:~/Projects/french/accre_tutorial$ R
+
+R version 4.3.3 (2024-02-29) -- "Angel Food Cake"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> source('simulation.R')
+> set.seed(12)
+> simulation(12)
+Error in simulation(12) : SOMETHING WENT HORRIBLY WRONG!
+```
+
+Locally we've reproduced the failure and can move towards getting that
+fixed.
+
+Assuming that was done, one can pull the results locally using `scp`.
+
+```
+garbetsp:~/Projects/french/accre_tutorial$ scp -r login.accre.vanderbilt.edu:accre_tutorial/output .
+garbetsp@login.accre.vanderbilt.edu's password: 
+result-0001.Rdata                                      100%   85     1.7KB/s   00:00    
+result-0002.Rdata                                      100%   85     0.7KB/s   00:00    
+result-0004.Rdata                                      100%   85     1.8KB/s   00:00    
+result-0003.Rdata                                      100%   85     1.8KB/s   00:00    
+result-0015.Rdata                                      100%   86     1.6KB/s   00:00    
+result-0014.Rdata                                      100%   86     2.3KB/s   00:00    
+result-0016.Rdata                                      100%   86     2.3KB/s   00:00    
+result-0017.Rdata                                      100%   86     1.4KB/s   00:00    
+result-0007.Rdata                                      100%   85     0.9KB/s   00:00    
+result-0008.Rdata                                      100%   85     0.6KB/s   00:00    
+result-0018.Rdata                                      100%   86     1.0KB/s   00:00    
+result-0006.Rdata                                      100%   85     1.1KB/s   00:00    
+result-0005.Rdata                                      100%   85     1.8KB/s   00:00    
+result-0010.Rdata                                      100%   86     1.7KB/s   00:00    
+result-0009.Rdata                                      100%   85     1.1KB/s   00:00    
+result-0013.Rdata                                      100%   86     1.7KB/s   00:00    
+result-0011.Rdata                                      100%   86     1.8KB/s   00:00    
+result-0019.Rdata                                      100%   86     1.7KB/s   00:00    
+result-0020.Rdata                                      100%   86     1.6KB/s   00:00    
+garbetsp:~/Projects/french/accre_tutorial$ ls output
+result-0001.Rdata  result-0006.Rdata  result-0011.Rdata  result-0017.Rdata
+result-0002.Rdata  result-0007.Rdata  result-0013.Rdata  result-0018.Rdata
+result-0003.Rdata  result-0008.Rdata  result-0014.Rdata  result-0019.Rdata
+result-0004.Rdata  result-0009.Rdata  result-0015.Rdata  result-0020.Rdata
+result-0005.Rdata  result-0010.Rdata  result-0016.Rdata
+```
+
+Let's aggregate our results for reporting now now that we have it pulled locally.
+
+```
+> results <- do.call(rbind, lapply(list.files('output'), function(x) {
+  load(file.path('output',x))
+  n <- nchar(x)
+  result <- as.data.frame(result)
+  result$batch <- as.numeric(substr(x, n-9, n-6))
+  result
+}))
+> results
+   result batch
+1       3     1
+2       4     2
+3       5     3
+4       6     4
+5       7     5
+6       4     6
+7       5     7
+8       6     8
+9       7     9
+10      8    10
+11      4    11
+13      6    13
+14      7    14
+15      8    15
+16      5    16
+17      6    17
+18      7    18
+19      8    19
+20      9    20
+```
+
+There it is, the results of our batch runs. Looking at the batch numbers
+one can see that 12 is still missing.
+
+With this one is equipped with the basics of running jobs on ACCRE. 
+
+
