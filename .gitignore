@@ -47,3 +47,10 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Keep results and ACCRE status out of 
+# github
+output/
+status/
+
+*.Rproj

@@ -17,6 +17,12 @@ source('design.R') # Design from a consistent source
 
 # source('the_real_work.R') # <==== MODIFY HERE to load the real work
 
+  ###########################################################################
+ ##
+## Create directories if they don't exist
+if(!file.exists("output")) dir.create("output")
+if(!file.exists("status")) dir.create("status")
+
 
   ###########################################################################
  ##
