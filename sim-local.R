@@ -11,16 +11,21 @@ Sys.setenv(PKG_LIBS="-llapack")
 ## A single line source that loads ones simulation code.
 ##
 ## Must export `simulation <- function(x)`
-source("add_it_up.R")
+source("simulation.R")
 
   #############################################################################
  ##
 ## For execution on local desktop/laptop
-library(parallel)
+library(parallel)       # Note: library is called parallel, when it's
+                        # really batch array
  
-mclapply(123:124, mc.cores=8, function(x)
-{
-  set.seed(x)
-  simulation(x)
-})
+# Change the input 
+mclapply(12:13,         # <=== MODIFY HERE Batch Array numbers to run locally
+         mc.cores=8,    # <=== Number of local cpus use to batch
+         function(x)
+         {
+           set.seed(x)
+           simulation(x)
+         }
+)
 

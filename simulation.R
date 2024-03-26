@@ -8,10 +8,23 @@
 ##
 
 source('design.R') # Design from a consistent source
+
+
+
+  ###########################################################################
+ ##
+## Load ones actual target simulation here
+
 # source('the_real_work.R') # <==== MODIFY HERE to load the real work
+
+
+  ###########################################################################
+ ##
+##
 simulation <- function(x)
 {
   # For educational purposes, array job 12 will crash
+  # Delete this, of course, if one wishes results for batch array 12
   if(x == 12) stop("SOMETHING WENT HORRIBLY WRONG!")
 
   # Get the simulation design for this batch array

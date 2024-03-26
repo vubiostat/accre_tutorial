@@ -14,7 +14,7 @@ Sys.setenv(PKG_CXXFLAGS="-I${MKLROOT}/include")
 ## Load ones simulation code here. Should be a single command.
 ## Should export `simulation <- function(x)` that runs the simulation
 ## Given an array number
-source("add_it_up.R") 
+source("simulation.R") 
 
   #############################################################################
  ##
