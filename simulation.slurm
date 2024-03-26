@@ -6,7 +6,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --time=00:01:00
-#SBATCH --mem=500M
+#SBATCH --mem=100M
 #SBATCH --output=status/job%a.out
 #SBATCH --array=1-20
 

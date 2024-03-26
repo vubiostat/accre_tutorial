@@ -56,6 +56,36 @@ will also help get your account setup.
 This is a tricky bit. Two pieces of unknown information are required. Time to 
 execute and memory used. 
 
+```
+> source('simulation.R')
+> system.time(simulation(1))
+   user  system elapsed 
+  0.021   0.000   0.020 
+> sum(.Internal(gc(FALSE, FALSE, TRUE))[13:14])
+[1] 44.3
+```
+
+Running the job locally and tracking simulation time and total memory used
+tells us that we need 0.02 seconds of time and 44.3 MB. These are then
+used to inform the slurm requirements. In general modern laptops are
+way more powerful that the nodes on ACCRE, but with ACCRE you get
+access to 1000's. Modify your slurm jobs parameters to be twice the 
+time and about 50% or more of the memory required for some margin of
+safety. 
+
+If one overspecifies, it penalizes placement in the queue. If one 
+underspecifies the job is terminated before completion. 
+
+In the example case, we went a bit over this as these values are
+quite low. 
+
+```
+#SBATCH --time=00:01:00
+#SBATCH --mem=100M
+```
+
+This asks for a 1 minute of time with 100M available. 
+
 ### Login
 
 ```
@@ -97,7 +127,7 @@ The key fingerprint is:
 SHA256:QfgECwi18rmohyLD/8lJ/FwM2pc0OWTKaOvP7Ajof/g your_email@example.com
 The key's randomart image is:
 +--[ED25519 256]--+
-|.o... .o.        |
+|.oo.. .o.        |
 |. o   .o.o       |
 |  .. ..o.        |
 | o .  o =..      |
