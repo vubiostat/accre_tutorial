@@ -124,7 +124,7 @@ Enter same passphrase again:
 Your identification has been saved in /home/vunetid/.ssh/id_ed25519.
 Your public key has been saved in /home/vunetid/.ssh/id_ed25519.pub.
 The key fingerprint is:
-SHA256:QfgECwi18rmohyLD/8lJ/FwM2pc0OWTKaOvP7Ajof/g your_email@example.com
+SHA256:QfgECwi18rmohyLD/8lJ/ASDFASDFOvP7Ajof/g your_email@example.com
 The key's randomart image is:
 +--[ED25519 256]--+
 |.oo.. .o.        |
