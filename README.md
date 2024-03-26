@@ -39,3 +39,8 @@ would wish to reproduce that exact failure to determine what set of
 conditions led to that failure. These scripts should also require
 no modification running locally or on ACCRE.
 
+This github repository is configured as a template. This means that when one forks it comes over as a single commit. Feel free to fork this project
+to start simulation work on ACCRE. 
+
+## Walkthrough Example
+

@@ -9,8 +9,6 @@
 
 source('design.R') # Design from a consistent source
 
-
-
   ###########################################################################
  ##
 ## Load ones actual target simulation here
@@ -40,5 +38,11 @@ simulation <- function(x)
   result <- rowSums(design)  # <==== MODIFY HERE to call real work function
 
   # Save the result
-  save(result, file.path("output", paste0("result-", formatC(x, width=4, format='d', flag='0'))))
+  save(result, file=file.path(
+    "output",
+    paste0("result-",
+           formatC(x, width=4, format='d', flag='0'),
+           ".Rdata")
+    )
+  )
 }
