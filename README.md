@@ -107,28 +107,17 @@ This asks for a 1 minute of time with 100M available.
 ### File Descriptions
 
 design.R
-: This contains or creates a data.frame `simulation_design` that provides parameters associated
-: with the array number. This should be heavily modified by the end user
-: for their target problem.
+: This contains or creates a data.frame `simulation_design` that provides parameters associated with the array number. This should be heavily modified by the end user for their target problem.
 
 sim-accre.R
-: This requires no modification and takes the ARRAY number from the command
-: line when executed and sets the random seed and calls `simulation(x)` where
-: `x` is the array number.
+: This requires no modification and takes the ARRAY number from the command line when executed and sets the random seed and calls `simulation(x)` where `x` is the array number.
 
 sim-local.R
-: This is for local testing using multiple cores. Generally good for trying a
-: few array batches to make sure the code is ready for ACCRE. It has a
-: couple modification points for your local configuration or array goals.
+: This is for local testing using multiple cores. Generally good for trying a few array batches to make sure the code is ready for ACCRE. It has a couple modification points for your local configuration or array goals.
 
 
 simulation.R
-: This is the R code that demonstrates a simulation, that pulls the design, 
-: provides that to a function and saves the output. It is a template that
-: requires modification for your project and research. It should remain
-: about as simple as it is now, and complex simulation code should be sourced
-: into it. It has a cohesive clear purpose and outline. Putting a lot of
-: simulation custom code here would reduce the cohesion. 
+: This is the R code that demonstrates a simulation, that pulls the design, provides that to a function and saves the output. It is a template that requires modification for your project and research. It should remain about as simple as it is now, and complex simulation code should be sourced into it. It has a cohesive clear purpose and outline. Putting a lot of simulation custom code here would reduce the cohesion. 
 
 simulation.slurm
 : An example slurm file that runs this example simulation, "add it up". 
