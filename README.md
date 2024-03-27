@@ -38,9 +38,11 @@ look something like this:
 ```
 
 It requests a single cpu 250 times independently, and doesn't ask for
-any special parallel or systolic needs. Jobs will get queued faster
+any special parallel needs, i.e. each job is a single independent node
+with one task and one cpu. Jobs will get queued faster
 and turn around will generally be quicker, and depending on fair
-share weighting should take few resources from the pool.
+share weighting should take fewer resources from the group pool than a parallel
+request.
 
 ## Goals
 
@@ -101,6 +103,35 @@ quite low.
 ```
 
 This asks for a 1 minute of time with 100M available. 
+
+### File Descriptions
+
+design.R
+: This contains or creates a data.frame `simulation_design` that provides parameters associated
+: with the array number. This should be heavily modified by the end user
+: for their target problem.
+
+sim-accre.R
+: This requires no modification and takes the ARRAY number from the command
+: line when executed and sets the random seed and calls `simulation(x)` where
+: `x` is the array number.
+
+sim-local.R
+: This is for local testing using multiple cores. Generally good for trying a
+: few array batches to make sure the code is ready for ACCRE. It has a
+: couple modification points for your local configuration or array goals.
+
+
+simulation.R
+: This is the R code that demonstrates a simulation, that pulls the design, 
+: provides that to a function and saves the output. It is a template that
+: requires modification for your project and research. It should remain
+: about as simple as it is now, and complex simulation code should be sourced
+: into it. It has a cohesive clear purpose and outline. Putting a lot of
+: simulation custom code here would reduce the cohesion. 
+
+simulation.slurm
+: An example slurm file that runs this example simulation, "add it up". 
 
 ### Login
 
