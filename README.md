@@ -153,15 +153,13 @@ The key's randomart image is:
 |B...=.O .        |
 |++oo+EoB         |
 +----[SHA256]-----+
-[vunetid@gw346 ~]$ cat ~/id_rsa.pub
-cat: /home/vunetid/id_rsa.pub: No such file or directory
 [vunetid@gw346 ~]$ cat ~/.ssh/
 id_ed25519      id_ed25519.pub  known_hosts     
 [vunetid@gw346 ~]$ cat ~/.ssh/id_ed25519.pub
 ssh-ed25519 AAAAC3ASDFASDFASDFASDFASDFASDFASDFsXRQwPG2kQLdeV your_email@example.com
 ```
 
-Copy the resulting _*public*_ key to your github account. The associated 
+Copy the resulting _*public*_ key `id_ed25519.pub` to your github account. The associated 
 `id_ed25519` is the private key that is equivalent to a password and
 should be treated with great care.
 
@@ -248,7 +246,7 @@ mclapply(12:13,         # <=== MODIFY HERE Batch Array numbers to run locally
 This says we will rerun 12 and 13 locally. But this is for doing multiple batches. A more direct debug session would be as follows:
 
 ```
-vunetid:~/Projects/french/accre_tutorial$ R
+vunetid:~/Projects/accre_tutorial$ R
 
 R version 4.3.3 (2024-02-29) -- "Angel Food Cake"
 Copyright (C) 2024 The R Foundation for Statistical Computing
@@ -280,7 +278,7 @@ fixed.
 Assuming that was done, one can pull the results locally using `scp`.
 
 ```
-vunetid:~/Projects/french/accre_tutorial$ scp -r login.accre.vanderbilt.edu:accre_tutorial/output .
+vunetid:~/Projects/accre_tutorial$ scp -r login.accre.vanderbilt.edu:accre_tutorial/output .
 vunetid@login.accre.vanderbilt.edu's password: 
 result-0001.Rdata                                      100%   85     1.7KB/s   00:00    
 result-0002.Rdata                                      100%   85     0.7KB/s   00:00    
@@ -301,7 +299,7 @@ result-0013.Rdata                                      100%   86     1.7KB/s   0
 result-0011.Rdata                                      100%   86     1.8KB/s   00:00    
 result-0019.Rdata                                      100%   86     1.7KB/s   00:00    
 result-0020.Rdata                                      100%   86     1.6KB/s   00:00    
-vunetid:~/Projects/french/accre_tutorial$ ls output
+vunetid:~/Projects/accre_tutorial$ ls output
 result-0001.Rdata  result-0006.Rdata  result-0011.Rdata  result-0017.Rdata
 result-0002.Rdata  result-0007.Rdata  result-0013.Rdata  result-0018.Rdata
 result-0003.Rdata  result-0008.Rdata  result-0014.Rdata  result-0019.Rdata
