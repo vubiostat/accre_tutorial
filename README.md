@@ -1,4 +1,4 @@
-# Accre Tutorial
+# ACCRE Tutorial
 A short tutorial on using [ACCRE](https://www.vanderbilt.edu/accre/) aimed at Biostatistician needs. 
 
 ## Parallel Versus Array
