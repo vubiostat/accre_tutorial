@@ -15,6 +15,8 @@ ACCRE provides resources for solving such problems, and it involves having a
 high number of CPUs and nodes with high speed communication buses allocated
 all at once. A problem of this type quickly burns through fair share and can
 leave ones smaller shared group account depleted with just a couple requests.
+The proper configuration and design of such problems is complex and requires
+dedicated study. 
 
 <img src="./imgs/array-job.png" width="640"/>
 
