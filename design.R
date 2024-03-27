@@ -11,11 +11,11 @@
 ## Advanced note: if one is using this to provide a series of parameter
 ## draws to explore a space for a final estimate under uncertainty, 
 ## consider using a Halton sequence instead of random draws. It converges
-## on estimates with 3-4x greater efficiency. A Halton sequence
-## is a low discrepancy sequence similar to a Latin hypercube, but 
+## on estimates with 3-4x greater efficiency. A Halton (an improved Sobol)
+## sequence is a low discrepancy sequence similar to a Latin hypercube, but 
 ## unlike the Latin hypercube one can continue to draw more values
 ## if convergence was not reached. The package `randtoolbox`
-## provides Halton sequence. The Halton is a n-dimensional low
+## provides Halton sequences. The Halton is a n-dimensional low
 ## discrepancy pseudo random number in the space [0,1]^n. Use
 ## quantile functions to turn into draws inside a distribution.
 
