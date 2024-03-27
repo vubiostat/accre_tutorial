@@ -1,5 +1,9 @@
 # ACCRE Tutorial
+
 A short tutorial on using [ACCRE](https://www.vanderbilt.edu/accre/) aimed at Biostatistician needs. 
+
+[Vanderbilt University Medical Center](https://www.vumc.org/main/home)
+[Department of Biostatistics](https://www.vumc.org/biostatistics/vanderbilt-department-biostatistics)
 
 ## Parallel Versus Array
 
@@ -27,7 +31,11 @@ other runs. These types of problems are known as batch array jobs. Note the
 lack of coordination or communication between the nodes. The
 relevant [slurm](https://slurm.schedmd.com/overview.html) parameter is `array`. 
 This runs multiple jobs independently and fits them in as possible, likely 
-using less resources than a parallel job request. A batch array should
+using less resources than a parallel job request. A short intro to [ACCRE](https://jeffreyliang-vandy.github.io/ACCRE/accre_introduction.html) is
+provided by Jeffrey Liang. 
+
+
+A batch array should
 look something like this:
 
 ```
