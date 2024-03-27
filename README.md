@@ -15,6 +15,7 @@ ACCRE provides resources for solving such problems, and it involves having a
 high number of CPUs and nodes with high speed communication buses allocated
 all at once. A problem of this type quickly burns through fair share and can
 leave ones smaller shared group account depleted with just a couple requests.
+It also leads to long delays in a job getting executed.
 The proper configuration and design of such problems is complex and requires
 dedicated study. 
 
@@ -38,7 +39,8 @@ look something like this:
 
 It requests a single cpu 250 times independently, and doesn't ask for
 any special parallel or systolic needs. Jobs will get queued faster
-and turn around will generally be quicker. 
+and turn around will generally be quicker, and depending on fair
+share weighting should take few resources from the pool.
 
 ## Goals
 
