@@ -1,7 +1,7 @@
 # Accre Tutorial
 A short tutorial on using [ACCRE](https://www.vanderbilt.edu/accre/) aimed at Biostatistician needs. 
 
-## Parallel Versus Batch
+## Parallel Versus Array
 
 Parallel computing is required to numerically evaluate large simulations involving
 spatial and time information. The [Parallel Pipeline Computation Model](http://users.ece.northwestern.edu/~wkliao/STAP/model.html) at Northwestern
