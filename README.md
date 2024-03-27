@@ -61,6 +61,10 @@ for using ACCRE. If one has not done this and opens a support
 request or consume too many resources, access may be denied. This
 will also help get your account setup.
 
+One also needs to understand the [command line](https://ubuntu.com/tutorials/command-line-for-beginners#1-overview)
+using a terminal or shell. Various [references](https://www.geeksforgeeks.org/linux-commands-cheat-sheet/) exist
+on the web of the most common commands. 
+
 ### Determine Job Resources
 
 This is a tricky bit. Two pieces of unknown information are required. Time to 
