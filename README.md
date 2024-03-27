@@ -255,8 +255,16 @@ job12.out:Error in simulation(x) : SOMETHING WENT HORRIBLY WRONG!
 ```
 
 Sure enough one of the jobs contained an error. Let's run that locally and
-see if we can recreate it. Jumping back to a local terminal and
-editing sim-local.R, this line:
+see if we can recreate it. Jumping back to a local terminal.
+
+```
+[vunetid@gw346 status]$ exit
+logout
+Connection to login.accre.vanderbilt.edu closed.
+vunetid:~/Projects/accre_tutorial$
+```
+
+Then editing sim-local.R, this line:
 
 ```
 mclapply(12:13,         # <=== MODIFY HERE Batch Array numbers to run locally
@@ -298,6 +306,7 @@ fixed.
 Assuming that was done, one can pull the results locally using `scp`.
 
 ```
+vunetid:~/Projects/accre_tutorial$
 vunetid:~/Projects/accre_tutorial$ scp -r login.accre.vanderbilt.edu:accre_tutorial/output .
 vunetid@login.accre.vanderbilt.edu's password: 
 result-0001.Rdata                                      100%   85     1.7KB/s   00:00    
@@ -365,4 +374,15 @@ one can see that 12 is still missing.
 
 With this one is equipped with the basics of running jobs on ACCRE. 
 
+## Docker
 
+The R versions hosted by ACCRE are usually out of date, as the speed of
+R versions changes rapidly. This can cause issues with getting
+all the packages installed, since CRAN has no support for older
+versions of R or the packages compiled for them. The recommended
+solution is [Docker](https://en.wikipedia.org/wiki/Docker_(software)). 
+It allows one to create a binary bundle that contains all the installed packages
+required and is a lightweight virtual computer. Let's explore the
+steps required to create a docker image of our Add It Up example. 
+
+TBD
