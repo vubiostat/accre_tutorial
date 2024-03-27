@@ -3,19 +3,27 @@ A short tutorial on using [ACCRE](https://www.vanderbilt.edu/accre/) aimed at Bi
 
 ## Parallel Versus Batch
 
-Parallel computing is required to numerically evaluate large [systolic arrays](https://en.wikipedia.org/wiki/Systolic_array).
+Parallel computing is required to numerically evaluate large simulations involving
+spatial and time information. The [Parallel Pipeline Computation Model](http://users.ece.northwestern.edu/~wkliao/STAP/model.html) at Northwestern
+demonstrates this numerical analytic design. 
+
+![](http://users.ece.northwestern.edu/~wkliao/STAP/images/pipeline_color.gif)
+
 These kinds of problems are common in solving large partial differential
 equations, ultra high dimensional spectral analysis, and nuclear simulations.
 ACCRE provides resources for solving such problems, and it involves having a
 high number of CPUs and nodes with high speed communication buses allocated
 all at once. A problem of this type quickly burns through fair share and can
-leave ones shared group account depleted with just a couple requests.
+leave ones smaller shared group account depleted with just a couple requests.
+
+![](./imgs/array-job.png =x640)
 
 Biostatistics problems typically consist of simulations involving multiple
 runs that are independent and do not communicate or share information with
-other runs. These types of problems are known as batch array jobs. The
+other runs. These types of problems are known as batch array jobs. Note the
+lack of coordination or communication between the nodes. The
 relevant [slurm](https://slurm.schedmd.com/overview.html) parameter is `array`. 
-This runs multiple jobs independently and fits them in as needed, likely 
+This runs multiple jobs independently and fits them in as possible, likely 
 using less resources than a parallel job request. A batch array should
 look something like this:
 
