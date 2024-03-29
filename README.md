@@ -45,12 +45,13 @@ look something like this:
 #SBATCH --array=1-250
 ```
 
-It requests a single cpu 250 times independently, and doesn't ask for
+Each job needs a single node for a single task with a single CPU. 
+It requests this 250 times independently, and doesn't ask for
 any special parallel needs, i.e. each job is a single independent node
-with one task and one cpu. Jobs will get queued faster
+with one task and one CPU. Jobs will get queued faster
 and turn around will generally be quicker, and depending on fair
-share weighting should take fewer resources from the group pool than a parallel
-request.
+share weighting should take fewer resources from the group pool than a 
+parallel request.
 
 ## Goals
 
@@ -393,4 +394,6 @@ It allows one to create a binary bundle that contains all the installed packages
 required and is a lightweight virtual computer. Let's explore the
 steps required to create a docker image of our Add It Up example. 
 
-TBD
+Jeffrey has a [tutorial](https://jeffreyliang-vandy.github.io/ACCRE/accre_introduction.html#/docker) 
+on building a Docker image using [Singularity](https://en.wikipedia.org/wiki/Singularity_(software)),
+which is the version of Docker supported by ACCRE. 
