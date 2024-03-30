@@ -6,6 +6,8 @@
 ## Our simulation will focus on adding it's design
 ## parameters together
 ##
+## Array numbers in the slurm file, the design and this file are
+## principal intended modification points
 
 source('design.R') # Design from a consistent source
 
@@ -15,7 +17,7 @@ source('design.R') # Design from a consistent source
 
 # source('the_real_work.R') # <==== MODIFY HERE to load the real work
 
-# Silly example, DELETE for doing real work. Prefered to load from
+# Silly example, DELETE for doing real work. Preferred to load from
 # external R file for a real project
 add_it_up <- function(design)
 {
@@ -47,6 +49,9 @@ simulation <- function(array_task_id)
   result <- add_it_up(design)  # <==== MODIFY HERE to call real work function
 
   # Save the result
+  # Note: ACCRE accounts have limited storage space, some models save
+  # with the entire dataset. Some judicious selection of results might
+  # be in order.
   save(result, file=file.path(
     "output",
     paste0("result-",
