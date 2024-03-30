@@ -35,23 +35,39 @@ using less resources than a parallel job request. A short intro to [ACCRE](https
 provided by Jeffrey Liang. 
 
 
-A batch array should
-look something like this:
+*Important:* A batch array should slurm look something like this:
 
 ```
+...
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --array=1-250
+...
 ```
 
-Each job needs a single node for a single task with a single CPU. 
-It requests this 250 times independently, and doesn't ask for
-any special parallel needs, i.e. each job is a single independent node
-with one task and one CPU. Jobs will get queued faster
-and turn around will generally be quicker, and depending on fair
-share weighting should take fewer resources from the group pool than a 
+This says we don't need complex coordinated across nodes and tasks with multiple cpus running for a task. We just need 1 job run 250 times. In 
+other words each independent simulation needs a single node for a
+single task with a single CPU. 
+It requests this configuration 250 times independently, and doesn't ask for
+any special parallel needs.
+
+With a large parallel setup, ACCRE has to plan and wait for all those resources to be available at once. With independent batch arrays it can fit in the cracks between all the other jobs running. Array jobs will get queued 
+faster and turn around will generally be quicker, and depending on fair
+share weighting takes fewer resources from the group pool than a 
 parallel request.
+
+One could submit more batches later and give them a different range of numbers.
+
+```
+...
+#SBATCH --array=251-500
+...
+```
+
+When slurm executes the job, this array number is important. It can control the associated design from a data.frame, it can seed the random number generator for repeatability. It can be used to identify failures. 
+Understanding the propagation of the array batch number from the slurm
+file through the R and how it's used is a key concept of this tutorial.
 
 ## Goals
 
@@ -113,6 +129,22 @@ quite low.
 
 This asks for a 1 minute of time with 100M available. 
 
+### Array Job Output
+
+The slurm line
+
+```
+#SBATCH --output=status/job%a.out
+```
+
+Tells ACCRE that all output from `cat`, `message`, `print`, and `stop` be
+written into the directory status, and give a title like `job12.out` via substitution of the array number. There is a lot of freedom in naming,
+See [filename pattern](https://slurm.schedmd.com/sbatch.html) in slurm
+help files. Most the other possible information is great for tracking a 
+running job, but not very helpful for reproducibilty of results. The
+array number allows to identify what succeed and what failed from our
+requested jobs. 
+
 ### File Descriptions
 
 design.R
@@ -131,7 +163,23 @@ simulation.R
 simulation.slurm
 : An example slurm file that runs this example simulation, "add it up". 
 
-### Login
+## Array ID Information Flow
+
+The Array Task ID propagates through the code in the following manner:
+
+```
+Slurm (${SLURM_ARRAY_TASK_ID}) -> 
+sim-accre.R (command line) -> 
+set.seed(array_task_id) -> 
+simulation(array_task_id) -> 
+simulation_design[array_task_id,] ->
+save( part of output file name )
+```
+
+The setting of the random seed allows one to reproduce any given 
+job run in another setting. Thus a failed job, one can debug locally.
+
+### Working Example
 
 ```
 vunetid:~$ ssh vunetid@login.accre.vanderbilt.edu
@@ -280,7 +328,7 @@ mclapply(12:13,         # <=== MODIFY HERE Batch Array numbers to run locally
          mc.cores=8,
 ```
 
-This says we will rerun 12 and 13 locally. But this is for doing multiple batches. A more direct debug session would be as follows:
+This says we will rerun 12 and 13 locally. But this is for doing multiple batches. A better direct debug session would be as follows:
 
 ```
 vunetid:~/Projects/accre_tutorial$ R

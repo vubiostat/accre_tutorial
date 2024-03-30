@@ -22,16 +22,16 @@ source("simulation.R")
 
 # Pull the ARRAY number from the command line arguments provided by slurm
 args <- commandArgs(trailingOnly=TRUE)
-x    <- as.numeric(args[1])
+array_task_id    <- as.numeric(args[1])
 
 # A simple output statement to the logs
-cat("Batch", x, "\n")
+cat("Batch", array_task_id, "\n")
 
 # Set the random seed using the array number
 # This could be moved inside the simulation function
 # But is included here for pedantic purposes as
 # this is _key_ to repoducibility. 
-set.seed(x) 
+set.seed(array_task_id) 
 
 # Now run the simulation and provide the array number
-simulation(x)
+simulation(array_task_id)
