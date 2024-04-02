@@ -360,39 +360,71 @@ Error in simulation(12) : SOMETHING WENT HORRIBLY WRONG!
 ```
 
 Locally we've reproduced the failure and can move towards getting that
-fixed.
-
-Assuming that was done, one can pull the results locally using `scp`.
+fixed. After some work, the problem is found in `simulation.R` on this
+line:
 
 ```
-vunetid:~/Projects/accre_tutorial$
+  if(array_task_id == 12) stop("SOMETHING WENT HORRIBLY WRONG!")
+```
+
+If one deletes that line, locally commits and saves to git. One can jump back
+over to ACCRE and do a git pull in the project and the changes will be
+ready to rerun job 12. 
+
+We just need to edit the `simulation.slurm` and change the request batch to rerun the fixed job. 
+
+```
+...
+#SBATCH --array=12
+...
+```
+
+Now when we submit this slurm job it will only run the single job that has
+task array id 12. 
+
+```
+[vunetid@gw344 accre_tutorial]$ sbatch simulation.slurm
+
+... Wait and check for job to complete and check for errors
+
+[vunetid@gw344 accre_tutorial]$ grep -i error status/*
+
+```
+
+With that clean bill of health, let's pull the data locally for analysis. The
+`scp` command stands for 'secure copy' and can move files between environments.
+Be sure to always include a ':' in a url of a remote device, otherwise it 
+will just work locally and lead to confusion. 
+
+```
 vunetid:~/Projects/accre_tutorial$ scp -r login.accre.vanderbilt.edu:accre_tutorial/output .
 vunetid@login.accre.vanderbilt.edu's password: 
-result-0001.Rdata                                      100%   85     1.7KB/s   00:00    
-result-0002.Rdata                                      100%   85     0.7KB/s   00:00    
-result-0004.Rdata                                      100%   85     1.8KB/s   00:00    
-result-0003.Rdata                                      100%   85     1.8KB/s   00:00    
-result-0015.Rdata                                      100%   86     1.6KB/s   00:00    
-result-0014.Rdata                                      100%   86     2.3KB/s   00:00    
-result-0016.Rdata                                      100%   86     2.3KB/s   00:00    
-result-0017.Rdata                                      100%   86     1.4KB/s   00:00    
-result-0007.Rdata                                      100%   85     0.9KB/s   00:00    
-result-0008.Rdata                                      100%   85     0.6KB/s   00:00    
-result-0018.Rdata                                      100%   86     1.0KB/s   00:00    
-result-0006.Rdata                                      100%   85     1.1KB/s   00:00    
-result-0005.Rdata                                      100%   85     1.8KB/s   00:00    
-result-0010.Rdata                                      100%   86     1.7KB/s   00:00    
-result-0009.Rdata                                      100%   85     1.1KB/s   00:00    
-result-0013.Rdata                                      100%   86     1.7KB/s   00:00    
-result-0011.Rdata                                      100%   86     1.8KB/s   00:00    
-result-0019.Rdata                                      100%   86     1.7KB/s   00:00    
-result-0020.Rdata                                      100%   86     1.6KB/s   00:00    
+result-0001.Rdata                             100%   85     2.7KB/s   00:00    
+result-0002.Rdata                             100%   85     2.9KB/s   00:00    
+result-0004.Rdata                             100%   85     2.8KB/s   00:00    
+result-0003.Rdata                             100%   85     2.7KB/s   00:00    
+result-0015.Rdata                             100%   86     2.9KB/s   00:00    
+result-0014.Rdata                             100%   86     1.8KB/s   00:00    
+result-0016.Rdata                             100%   86     2.9KB/s   00:00    
+result-0017.Rdata                             100%   86     2.8KB/s   00:00    
+result-0007.Rdata                             100%   85     2.3KB/s   00:00    
+result-0008.Rdata                             100%   85     2.9KB/s   00:00    
+result-0018.Rdata                             100%   86     2.7KB/s   00:00    
+result-0006.Rdata                             100%   85     3.0KB/s   00:00    
+result-0005.Rdata                             100%   85     2.8KB/s   00:00    
+result-0010.Rdata                             100%   86     2.9KB/s   00:00    
+result-0009.Rdata                             100%   85     2.7KB/s   00:00    
+result-0013.Rdata                             100%   86     2.8KB/s   00:00    
+result-0011.Rdata                             100%   86     2.7KB/s   00:00    
+result-0019.Rdata                             100%   86     2.9KB/s   00:00    
+result-0020.Rdata                             100%   86     2.6KB/s   00:00    
+result-0012.Rdata                             100%  132     3.4KB/s   00:00     
 vunetid:~/Projects/accre_tutorial$ ls output
-result-0001.Rdata  result-0006.Rdata  result-0011.Rdata  result-0017.Rdata
-result-0002.Rdata  result-0007.Rdata  result-0013.Rdata  result-0018.Rdata
-result-0003.Rdata  result-0008.Rdata  result-0014.Rdata  result-0019.Rdata
-result-0004.Rdata  result-0009.Rdata  result-0015.Rdata  result-0020.Rdata
-result-0005.Rdata  result-0010.Rdata  result-0016.Rdata
+result-0001.Rdata  result-0006.Rdata  result-0011.Rdata  result-0016.Rdata
+result-0002.Rdata  result-0007.Rdata  result-0012.Rdata  result-0017.Rdata
+result-0003.Rdata  result-0008.Rdata  result-0013.Rdata  result-0018.Rdata
+result-0004.Rdata  result-0009.Rdata  result-0014.Rdata  result-0019.Rdata
+result-0005.Rdata  result-0010.Rdata  result-0015.Rdata  result-0020.Rdata
 ```
 
 Let's aggregate our results for reporting now now that we have it pulled locally.
@@ -418,6 +450,7 @@ Let's aggregate our results for reporting now now that we have it pulled locally
 9       7     9
 10      8    10
 11      4    11
+12      5    12
 13      6    13
 14      7    14
 15      8    15
@@ -428,10 +461,9 @@ Let's aggregate our results for reporting now now that we have it pulled locally
 20      9    20
 ```
 
-There it is, the results of our batch runs. Looking at the batch numbers
-one can see that 12 is still missing.
-
-With this one is equipped with the basics of running jobs on ACCRE.
+There it is, the results of our batch runs. One can now proceed to produce 
+specular reports of the findings. This ends the main tutorial of running
+jobs on ACCRE for Biostatistics.
 
 ## Installing Packages
 
