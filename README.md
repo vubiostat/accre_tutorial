@@ -1,34 +1,78 @@
-# Accre Tutorial
+# ACCRE Tutorial
+
 A short tutorial on using [ACCRE](https://www.vanderbilt.edu/accre/) aimed at Biostatistician needs. 
 
-## Parallel Versus Batch
+[Vanderbilt University Medical Center](https://www.vumc.org/main/home)
+[Department of Biostatistics](https://www.vumc.org/biostatistics/vanderbilt-department-biostatistics)
 
-Parallel computing is required to numerically evaluate large [systolic arrays](https://en.wikipedia.org/wiki/Systolic_array).
+A short intro to [ACCRE](https://jeffreyliang-vandy.github.io/ACCRE/accre_introduction.html)
+is provided by Jeffrey Liang. This is designed to be a useable template and
+example of a recommended solution design using R. It is executable and
+modifiable, with clear instructions on what modifications should be made. 
+Please fork this repository and use as a seed for your own ACCRE simulation 
+project. Two key goals: reproducibility and simplicity. 
+
+## Parallel Versus Array
+
+Parallel computing is required to numerically evaluate large simulations 
+involving spatial and time information. The [Parallel Pipeline Computation Model](http://users.ece.northwestern.edu/~wkliao/STAP/model.html) at
+Northwestern demonstrates this numerical analytic design. 
+
+![](http://users.ece.northwestern.edu/~wkliao/STAP/images/pipeline_color.gif)
+
 These kinds of problems are common in solving large partial differential
 equations, ultra high dimensional spectral analysis, and nuclear simulations.
 ACCRE provides resources for solving such problems, and it involves having a
 high number of CPUs and nodes with high speed communication buses allocated
 all at once. A problem of this type quickly burns through fair share and can
-leave ones shared group account depleted with just a couple requests.
+leave ones smaller shared group account depleted with just a couple requests.
+It also leads to long delays in a job getting executed.
+The proper configuration and solution design of such problems is complex and 
+requires dedicated study. 
+
+<img src="./imgs/array-job.png" width="640"/>
 
 Biostatistics problems typically consist of simulations involving multiple
 runs that are independent and do not communicate or share information with
-other runs. These types of problems are known as batch array jobs. The
+other runs. These types of problems are known as batch array jobs. Note the
+lack of coordination or communication between the nodes. The
 relevant [slurm](https://slurm.schedmd.com/overview.html) parameter is `array`. 
-This runs multiple jobs independently and fits them in as needed, likely 
-using less resources than a parallel job request. A batch array should
-look something like this:
+This runs multiple jobs independently and fits them in as possible, likely 
+using less resources than a parallel job request.
+
+*Important:* A batch array should slurm look something like this:
 
 ```
+...
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --array=1-250
+...
 ```
 
-It requests a single cpu 250 times independently, and doesn't ask for
-any special parallel or systolic needs. Jobs will get queued faster
-and turn around will generally be quicker. 
+This says we don't need complex coordinated across nodes and tasks with multiple cpus running for a task. We just need 1 job run 250 times. In 
+other words each independent simulation needs a single node for a
+single task with a single CPU. 
+It requests this configuration 250 times independently, and doesn't ask for
+any special parallel needs.
+
+With a large parallel setup, ACCRE has to plan and wait for all those resources to be available at once. With independent batch arrays it can fit in the cracks between all the other jobs running. Array jobs will get queued 
+faster and turn around will generally be quicker, and depending on fair
+share weighting takes fewer resources from the group pool than a 
+parallel request.
+
+One could submit more batches later and give them a different range of numbers.
+
+```
+...
+#SBATCH --array=251-500
+...
+```
+
+When slurm executes the job, this array number is important. It can control the associated design from a data.frame, it can seed the random number generator for repeatability. It can be used to identify failures. 
+Understanding the propagation of the array batch number from the slurm
+file through the R and how it's used is a key concept of this tutorial.
 
 ## Goals
 
@@ -39,9 +83,6 @@ would wish to reproduce that exact failure to determine what set of
 conditions led to that failure. These scripts should also require
 no modification running locally or on ACCRE.
 
-This github repository is configured as a template. This means that when one forks it comes over as a single commit. Feel free to fork this project
-to start simulation work on ACCRE. 
-
 ## Walkthrough Example
 
 ### Required Training
@@ -50,6 +91,10 @@ Make sure one has taken the [required training courses](https://www.vanderbilt.e
 for using ACCRE. If one has not done this and opens a support
 request or consume too many resources, access may be denied. This
 will also help get your account setup.
+
+One also needs to understand the [command line](https://ubuntu.com/tutorials/command-line-for-beginners#1-overview)
+using a terminal or shell. Various [references](https://www.geeksforgeeks.org/linux-commands-cheat-sheet/) exist
+on the web of the most common commands. 
 
 ### Determine Job Resources
 
@@ -68,7 +113,7 @@ execute and memory used.
 Running the job locally and tracking simulation time and total memory used
 tells us that we need 0.02 seconds of time and 44.3 MB. These are then
 used to inform the slurm requirements. In general modern laptops are
-way more powerful that the nodes on ACCRE, but with ACCRE you get
+more powerful that the nodes on ACCRE, but with ACCRE you get
 access to 1000's. Modify your slurm jobs parameters to be twice the 
 time and about 50% or more of the memory required for some margin of
 safety. 
@@ -86,7 +131,57 @@ quite low.
 
 This asks for a 1 minute of time with 100M available. 
 
-### Login
+### Array Job Output
+
+The slurm line
+
+```
+#SBATCH --output=status/job%a.out
+```
+
+Tells ACCRE that all output from `cat`, `message`, `print`, and `stop` be
+written into the directory status, and give a title like `job12.out` via substitution of the array number. There is a lot of freedom in naming,
+See [filename pattern](https://slurm.schedmd.com/sbatch.html) in slurm
+help files. Most the other possible information is great for tracking a 
+running job, but not very helpful for reproducibilty of results. The
+array number allows to identify what succeeded and what failed from our
+requested jobs. 
+
+### File Descriptions
+
+design.R
+: This contains or creates a data.frame `simulation_design` that provides parameters associated with the array number. This should be heavily modified by the end user for their target problem.
+
+sim-accre.R
+: This requires no modification and takes the ARRAY number from the command line when executed and sets the random seed and calls `simulation(x)` where `x` is the array number.
+
+sim-local.R
+: This is for local testing using multiple cores. Generally good for trying a few array batches to make sure the code is ready for ACCRE. It has a couple modification points for your local configuration or array goals.
+
+
+simulation.R
+: This is the R code that demonstrates a simulation, that pulls the design, provides that to a function and saves the output. It is a template that requires modification for your project and research. It should remain about as simple as it is now, and complex simulation code should be sourced into it. It has a cohesive clear purpose and outline. Putting a lot of simulation custom code here would reduce the cohesion. 
+
+simulation.slurm
+: An example slurm file that runs this example simulation, "add it up". 
+
+## Array ID Information Flow
+
+The Array Task ID propagates through the code in the following manner:
+
+```
+Slurm (${SLURM_ARRAY_TASK_ID}) -> 
+sim-accre.R (command line) -> 
+set.seed(array_task_id) -> 
+simulation(array_task_id) -> 
+simulation_design[array_task_id,] ->
+save( part of output file name )
+```
+
+The setting of the random seed allows one to reproduce any given 
+job run in another setting. Thus a failed job, one can debug locally.
+
+### Working Example
 
 ```
 vunetid:~$ ssh vunetid@login.accre.vanderbilt.edu
@@ -124,7 +219,7 @@ Enter same passphrase again:
 Your identification has been saved in /home/vunetid/.ssh/id_ed25519.
 Your public key has been saved in /home/vunetid/.ssh/id_ed25519.pub.
 The key fingerprint is:
-SHA256:QfgECwi18rmohyLD/8lJ/FwM2pc0OWTKaOvP7Ajof/g your_email@example.com
+SHA256:QfgECwi18rmohyLD/8lJ/ASDFASDFOvP7Ajof/g your_email@example.com
 The key's randomart image is:
 +--[ED25519 256]--+
 |.oo.. .o.        |
@@ -137,15 +232,13 @@ The key's randomart image is:
 |B...=.O .        |
 |++oo+EoB         |
 +----[SHA256]-----+
-[vunetid@gw346 ~]$ cat ~/id_rsa.pub
-cat: /home/vunetid/id_rsa.pub: No such file or directory
 [vunetid@gw346 ~]$ cat ~/.ssh/
 id_ed25519      id_ed25519.pub  known_hosts     
 [vunetid@gw346 ~]$ cat ~/.ssh/id_ed25519.pub
 ssh-ed25519 AAAAC3ASDFASDFASDFASDFASDFASDFASDFsXRQwPG2kQLdeV your_email@example.com
 ```
 
-Copy the resulting _*public*_ key to your github account. The associated 
+Copy the resulting _*public*_ key `id_ed25519.pub` to your github account. The associated 
 `id_ed25519` is the private key that is equivalent to a password and
 should be treated with great care.
 
@@ -212,3 +305,145 @@ After waiting a few minutes, most of the jobs will be done.
 ```
 
 Now we can check to see how successful this was. 
+
+```
+[vunetid@gw346 accre_tutorial]$ cd status
+[vunetid@gw346 status]$ grep -i error *
+job12.out:Error in simulation(x) : SOMETHING WENT HORRIBLY WRONG!
+[vunetid@gw346 status]$ less job12.out # examines full log
+```
+
+Sure enough one of the jobs contained an error. Let's run that locally and
+see if we can recreate it. Jumping back to a local terminal.
+
+```
+[vunetid@gw346 status]$ exit
+logout
+Connection to login.accre.vanderbilt.edu closed.
+vunetid:~/Projects/accre_tutorial$
+```
+
+Then editing sim-local.R, this line:
+
+```
+mclapply(12:13,         # <=== MODIFY HERE Batch Array numbers to run locally
+         mc.cores=8,
+```
+
+This says we will rerun 12 and 13 locally. But this is for doing multiple batches. A better direct debug session would be as follows:
+
+```
+vunetid:~/Projects/accre_tutorial$ R
+
+R version 4.3.3 (2024-02-29) -- "Angel Food Cake"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> source('simulation.R')
+> set.seed(12)
+> simulation(12)
+Error in simulation(12) : SOMETHING WENT HORRIBLY WRONG!
+```
+
+Locally we've reproduced the failure and can move towards getting that
+fixed.
+
+Assuming that was done, one can pull the results locally using `scp`.
+
+```
+vunetid:~/Projects/accre_tutorial$
+vunetid:~/Projects/accre_tutorial$ scp -r login.accre.vanderbilt.edu:accre_tutorial/output .
+vunetid@login.accre.vanderbilt.edu's password: 
+result-0001.Rdata                                      100%   85     1.7KB/s   00:00    
+result-0002.Rdata                                      100%   85     0.7KB/s   00:00    
+result-0004.Rdata                                      100%   85     1.8KB/s   00:00    
+result-0003.Rdata                                      100%   85     1.8KB/s   00:00    
+result-0015.Rdata                                      100%   86     1.6KB/s   00:00    
+result-0014.Rdata                                      100%   86     2.3KB/s   00:00    
+result-0016.Rdata                                      100%   86     2.3KB/s   00:00    
+result-0017.Rdata                                      100%   86     1.4KB/s   00:00    
+result-0007.Rdata                                      100%   85     0.9KB/s   00:00    
+result-0008.Rdata                                      100%   85     0.6KB/s   00:00    
+result-0018.Rdata                                      100%   86     1.0KB/s   00:00    
+result-0006.Rdata                                      100%   85     1.1KB/s   00:00    
+result-0005.Rdata                                      100%   85     1.8KB/s   00:00    
+result-0010.Rdata                                      100%   86     1.7KB/s   00:00    
+result-0009.Rdata                                      100%   85     1.1KB/s   00:00    
+result-0013.Rdata                                      100%   86     1.7KB/s   00:00    
+result-0011.Rdata                                      100%   86     1.8KB/s   00:00    
+result-0019.Rdata                                      100%   86     1.7KB/s   00:00    
+result-0020.Rdata                                      100%   86     1.6KB/s   00:00    
+vunetid:~/Projects/accre_tutorial$ ls output
+result-0001.Rdata  result-0006.Rdata  result-0011.Rdata  result-0017.Rdata
+result-0002.Rdata  result-0007.Rdata  result-0013.Rdata  result-0018.Rdata
+result-0003.Rdata  result-0008.Rdata  result-0014.Rdata  result-0019.Rdata
+result-0004.Rdata  result-0009.Rdata  result-0015.Rdata  result-0020.Rdata
+result-0005.Rdata  result-0010.Rdata  result-0016.Rdata
+```
+
+Let's aggregate our results for reporting now now that we have it pulled locally.
+
+```
+> results <- do.call(rbind, lapply(list.files('output'), function(x) {
+  load(file.path('output',x))
+  n <- nchar(x)
+  result <- as.data.frame(result)
+  result$batch <- as.numeric(substr(x, n-9, n-6))
+  result
+}))
+> results
+   result batch
+1       3     1
+2       4     2
+3       5     3
+4       6     4
+5       7     5
+6       4     6
+7       5     7
+8       6     8
+9       7     9
+10      8    10
+11      4    11
+13      6    13
+14      7    14
+15      8    15
+16      5    16
+17      6    17
+18      7    18
+19      8    19
+20      9    20
+```
+
+There it is, the results of our batch runs. Looking at the batch numbers
+one can see that 12 is still missing.
+
+With this one is equipped with the basics of running jobs on ACCRE. 
+
+## Docker
+
+The R versions hosted by ACCRE are usually out of date, as the speed of
+R versions changes rapidly. This can cause issues with getting
+all the packages installed, since CRAN has no support for older
+versions of R or the packages compiled for them. The recommended
+solution is [Docker](https://en.wikipedia.org/wiki/Docker_(software)). 
+It allows one to create a binary bundle that contains all the installed packages
+required and is a lightweight virtual computer. Let's explore the
+steps required to create a docker image of our Add It Up example. 
+
+Jeffrey has a [tutorial](https://jeffreyliang-vandy.github.io/ACCRE/accre_introduction.html#/docker) 
+on building a Docker image using [Singularity](https://en.wikipedia.org/wiki/Singularity_(software)),
+which is the version of Docker supported by ACCRE. 

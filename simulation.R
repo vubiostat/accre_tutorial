@@ -6,6 +6,8 @@
 ## Our simulation will focus on adding it's design
 ## parameters together
 ##
+## Array numbers in the slurm file, the design and this file are
+## principal intended modification points
 
 source('design.R') # Design from a consistent source
 
@@ -15,7 +17,7 @@ source('design.R') # Design from a consistent source
 
 # source('the_real_work.R') # <==== MODIFY HERE to load the real work
 
-# Silly example, DELETE for doing real work. Prefered to load from
+# Silly example, DELETE for doing real work. Preferred to load from
 # external R file for a real project
 add_it_up <- function(design)
 {
@@ -34,23 +36,26 @@ if(!file.exists("status")) dir.create("status")
   ###########################################################################
  ##
 ##
-simulation <- function(x)
+simulation <- function(array_task_id)
 {
   # For educational purposes, array job 12 will crash
-  # Delete this, of course, if one wishes results for batch array 12
-  if(x == 12) stop("SOMETHING WENT HORRIBLY WRONG!")
+  # DELETE THIS, of course to do real work
+  if(array_task_id == 12) stop("SOMETHING WENT HORRIBLY WRONG!")
 
   # Get the simulation design for this batch array
-  design <- simulation_design[x,]
+  design <- simulation_design[array_task_id,]
 
   # Add it up (this would be the actual simulation call for ones research)
   result <- add_it_up(design)  # <==== MODIFY HERE to call real work function
 
   # Save the result
+  # Note: ACCRE accounts have limited storage space, some models save
+  # with the entire dataset. Some judicious selection of results might
+  # be in order.
   save(result, file=file.path(
     "output",
     paste0("result-",
-           formatC(x, width=4, format='d', flag='0'),
+           formatC(array_task_id, width=4, format='d', flag='0'),
            ".Rdata")
     )
   )

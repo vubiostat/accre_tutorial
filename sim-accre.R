@@ -11,9 +11,7 @@ Sys.setenv(PKG_CXXFLAGS="-I${MKLROOT}/include")
 
   #############################################################################
  ##
-## Load ones simulation code here. Should be a single command.
-## Should export `simulation <- function(x)` that runs the simulation
-## Given an array number
+## Load simulation file that contains `simulation <- function(array_task_id)`
 source("simulation.R") 
 
   #############################################################################
@@ -22,16 +20,16 @@ source("simulation.R")
 
 # Pull the ARRAY number from the command line arguments provided by slurm
 args <- commandArgs(trailingOnly=TRUE)
-x    <- as.numeric(args[1])
+array_task_id    <- as.numeric(args[1])
 
 # A simple output statement to the logs
-cat("Batch", x, "\n")
+cat("Batch", array_task_id, "\n")
 
 # Set the random seed using the array number
 # This could be moved inside the simulation function
 # But is included here for pedantic purposes as
 # this is _key_ to repoducibility. 
-set.seed(x) 
+set.seed(array_task_id) 
 
 # Now run the simulation and provide the array number
-simulation(x)
+simulation(array_task_id)
