@@ -499,7 +499,7 @@ module load OpenMPI/4.1.4
 module load R/4.2.1
 ```
 
-With R loaded once can proceed to install packages. Chose local library when
+With R loaded one can proceed to install packages. Chose local library when
 asked. 
 
 ```
