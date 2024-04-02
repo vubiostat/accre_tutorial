@@ -89,7 +89,7 @@ no modification running locally or on ACCRE.
 
 Make sure one has taken the [required training courses](https://www.vanderbilt.edu/accre/getting-started/training/)
 for using ACCRE. If one has not done this and opens a support
-request or consume too many resources, access may be denied. This
+request or consumes too many resources, access may be denied. This
 will also help get your account setup.
 
 One also needs to understand the [command line](https://ubuntu.com/tutorials/command-line-for-beginners#1-overview)
@@ -462,7 +462,7 @@ Let's aggregate our results for reporting now now that we have it pulled locally
 ```
 
 There it is, the results of our batch runs. One can now proceed to produce 
-specular reports of the findings. This ends the main tutorial of running
+spectacular reports of the findings. This ends the main tutorial of running
 jobs on ACCRE for Biostatistics.
 
 ## Installing Packages
