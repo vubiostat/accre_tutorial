@@ -431,7 +431,100 @@ Let's aggregate our results for reporting now now that we have it pulled locally
 There it is, the results of our batch runs. Looking at the batch numbers
 one can see that 12 is still missing.
 
-With this one is equipped with the basics of running jobs on ACCRE. 
+With this one is equipped with the basics of running jobs on ACCRE.
+
+## Installing Packages
+
+Installing packages in the ACCRE environment can be challenging.
+
+### Minor Housekeeping
+
+The following if placed in `~/.Rprofile` will set quit to always not save the 
+environment and set the CRAN mirror to nearby Oak Ridge. 
+
+```
+utils::assignInNamespace(
+  "q",
+  function(save="no", status=0, runLast=TRUE)
+  {
+    .Internal(quit(save, status, runLast))
+  },
+  "base"
+)
+options(repos=c(CRAN="https://mirrors.nics.utk.edu/cran/"))
+
+```
+
+### Load Modules
+
+One can now proceed to install R packages from source by loading the latest
+R modules into the environment.
+
+```
+module purge
+module load GCC/11.3.0
+module load OpenMPI/4.1.4
+module load R/4.2.1
+```
+
+With R loaded once can proceed to install packages. Chose local library when
+asked. 
+
+```
+[vunetid@gw344 accre_tutorial]$ R
+
+R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+> install.packages('cli')
+Warning in install.packages("cli") :
+  'lib = "/cvmfs/oasis.opensciencegrid.org/accre/mirror/optimized/sandy_bridge/easybuild/software/MPI/GCC/11.3.0/OpenMPI/4.1.4/R/4.2.1/lib64/R/library"' is not writable
+Would you like to use a personal library instead? (yes/No/cancel) yes
+Would you like to create a personal library
+‘/panfs/accrepfs.vampire/home/vunetid/R/x86_64-pc-linux-gnu-library/4.2’
+to install packages into? (yes/No/cancel) yes
+trying URL 'https://mirrors.nics.utk.edu/cran/src/contrib/cli_3.6.2.tar.gz'
+Content type 'application/x-gzip' length 569771 bytes (556 KB)
+==================================================
+downloaded 556 KB
+
+* installing *source* package ‘cli’ ...
+
+...
+
+installing to /panfs/accrepfs.vampire/home/vunetid/R/x86_64-pc-linux-gnu-library/4.2/00LOCK-cli/00new/cli/libs
+** R
+** exec
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (cli)
+
+The downloaded source packages are in
+	‘/tmp/RtmpeV14yC/downloaded_packages’
+> 
+```
 
 ## Docker
 
