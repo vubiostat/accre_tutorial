@@ -427,7 +427,7 @@ result-0004.Rdata  result-0009.Rdata  result-0014.Rdata  result-0019.Rdata
 result-0005.Rdata  result-0010.Rdata  result-0015.Rdata  result-0020.Rdata
 ```
 
-Let's aggregate our results for reporting now now that we have it pulled locally.
+Let's aggregate results for reporting now that they are pulled local.
 
 ```
 > results <- do.call(rbind, lapply(list.files('output'), function(x) {
