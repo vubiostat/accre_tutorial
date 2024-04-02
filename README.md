@@ -5,11 +5,18 @@ A short tutorial on using [ACCRE](https://www.vanderbilt.edu/accre/) aimed at Bi
 [Vanderbilt University Medical Center](https://www.vumc.org/main/home)
 [Department of Biostatistics](https://www.vumc.org/biostatistics/vanderbilt-department-biostatistics)
 
+A short intro to [ACCRE](https://jeffreyliang-vandy.github.io/ACCRE/accre_introduction.html)
+is provided by Jeffrey Liang. This is designed to be a useable template and
+example of a recommended solution design using R. It is executable and
+modifiable, with clear instructions on what modifications should be made. 
+Please fork this repository and use as a seed for your own ACCRE simulation 
+project. Two key goals: reproducibility and simplicity. 
+
 ## Parallel Versus Array
 
-Parallel computing is required to numerically evaluate large simulations involving
-spatial and time information. The [Parallel Pipeline Computation Model](http://users.ece.northwestern.edu/~wkliao/STAP/model.html) at Northwestern
-demonstrates this numerical analytic design. 
+Parallel computing is required to numerically evaluate large simulations 
+involving spatial and time information. The [Parallel Pipeline Computation Model](http://users.ece.northwestern.edu/~wkliao/STAP/model.html) at
+Northwestern demonstrates this numerical analytic design. 
 
 ![](http://users.ece.northwestern.edu/~wkliao/STAP/images/pipeline_color.gif)
 
@@ -20,8 +27,8 @@ high number of CPUs and nodes with high speed communication buses allocated
 all at once. A problem of this type quickly burns through fair share and can
 leave ones smaller shared group account depleted with just a couple requests.
 It also leads to long delays in a job getting executed.
-The proper configuration and design of such problems is complex and requires
-dedicated study. 
+The proper configuration and solution design of such problems is complex and 
+requires dedicated study. 
 
 <img src="./imgs/array-job.png" width="640"/>
 
@@ -31,9 +38,7 @@ other runs. These types of problems are known as batch array jobs. Note the
 lack of coordination or communication between the nodes. The
 relevant [slurm](https://slurm.schedmd.com/overview.html) parameter is `array`. 
 This runs multiple jobs independently and fits them in as possible, likely 
-using less resources than a parallel job request. A short intro to [ACCRE](https://jeffreyliang-vandy.github.io/ACCRE/accre_introduction.html) is
-provided by Jeffrey Liang. 
-
+using less resources than a parallel job request.
 
 *Important:* A batch array should slurm look something like this:
 
@@ -78,9 +83,6 @@ would wish to reproduce that exact failure to determine what set of
 conditions led to that failure. These scripts should also require
 no modification running locally or on ACCRE.
 
-This github repository is configured as a template. This means that when one forks it comes over as a single commit. Feel free to fork this project
-to start simulation work on ACCRE. 
-
 ## Walkthrough Example
 
 ### Required Training
@@ -111,7 +113,7 @@ execute and memory used.
 Running the job locally and tracking simulation time and total memory used
 tells us that we need 0.02 seconds of time and 44.3 MB. These are then
 used to inform the slurm requirements. In general modern laptops are
-way more powerful that the nodes on ACCRE, but with ACCRE you get
+more powerful that the nodes on ACCRE, but with ACCRE you get
 access to 1000's. Modify your slurm jobs parameters to be twice the 
 time and about 50% or more of the memory required for some margin of
 safety. 
@@ -142,7 +144,7 @@ written into the directory status, and give a title like `job12.out` via substit
 See [filename pattern](https://slurm.schedmd.com/sbatch.html) in slurm
 help files. Most the other possible information is great for tracking a 
 running job, but not very helpful for reproducibilty of results. The
-array number allows to identify what succeed and what failed from our
+array number allows to identify what succeeded and what failed from our
 requested jobs. 
 
 ### File Descriptions
