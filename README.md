@@ -51,7 +51,7 @@ using less resources than a parallel job request.
 ...
 ```
 
-This says we don't need complex coordination across nodes and tasks with multiple cpus running for a task. We just need 1 job run 250 times. In 
+The advice going around that _'the more nodes the faster the job'_ is *not* true. In fact it's the opposite. This snippet says we don't need complex coordination across nodes and tasks with multiple cpus running for a task. We just need 1 job run 250 times. In 
 other words each independent simulation needs a single node for a
 single task with a single CPU. 
 It requests this configuration 250 times independently, and doesn't ask for
