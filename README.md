@@ -571,4 +571,43 @@ steps required to create a docker image of our Add It Up example.
 
 Jeffrey has a [tutorial](https://jeffreyliang-vandy.github.io/ACCRE/accre_introduction.html#/docker) 
 on building a Docker image using [Singularity](https://en.wikipedia.org/wiki/Singularity_(software)),
-which is the version of Docker supported by ACCRE. 
+which is the version of Docker supported by ACCRE.
+
+## But I'm still waiting for days!?
+
+This tutorial demonstrated a strategy to properly configure array jobs for ACCRE
+that corresponds to general needs of statisicians. This helps prevent
+excessive fairshare usage by misconfigured jobs. It does not ensure that
+[fairshare priority](https://docs.crc.ku.edu/how-to/fairshare-priority/) is
+adequate for one's group. In practical terms, this means that a job one day can be immediately 
+executed when there is fairshare and take 3 days when there is no fairshare left.
+Fairshare is paid for by your department, and once exhausted ones jobs have to 
+age into being executed. This tutorial helps one not exhaust fairshare carelessly, but the
+usage rate and how long till it runs out is based on what your group has paid 
+for and how many jobs one's group is running. If there is remaining fairshare for
+one's group ACCRE adds this to the priority of the job and deducts the group
+pool. Each job not run gets it's priority incremented per some timestamp. 
+
+A completely made up example with made up numbers would be as follows:
+
+Group A with remaining fairshare submits a large array job. These jobs get bumped
+in priority by +100 by using fairshare (and theirs goes down), and thus have a rating of 100. 
+
+Group B with no remaining fairshare in the time cycle submits a large array job. 
+These jobs get no bump in priority and start at 0.
+
+The ACCRE scheduler picks Group A's jobs to run. As time marches forward, Group
+B's jobs get incremented for every time step they wait. Let's say they wait 24 
+hours, the jobs now have priority 24. If A doesn't submit another group using
+fairshare then B's will get picked. Otherwise, as long as group A keeps submitting
+they will have priority over till B's jobs are over 100 hours old or 
+the next round of fairshare gets released into accounts (I think it's monthly).
+
+While these numbers are completely made up, my personal experience is that
+once my groups fair share has been spent it takes about 3 days before
+my jobs are executed.
+
+Using commercial cloud services is an alternative for immediate execution, but
+the expense involved requires much more funding. ACCRE is very cost effective
+in comparison, but jobs will take a few days to start up when fairshare is
+exhausted.
