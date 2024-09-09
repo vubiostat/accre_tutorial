@@ -238,7 +238,7 @@ id_ed25519      id_ed25519.pub  known_hosts
 ssh-ed25519 AAAAC3ASDFASDFASDFASDFASDFASDFASDFsXRQwPG2kQLdeV your_email@example.com
 ```
 
-Copy the resulting _*public*_ key `id_ed25519.pub` to your github account. It's on the [github.com](github.com) website, click your icon in the upper right and then select "Settings". On that pack select the left hand side option "SSH and GPG keys". Click the green button "New SSH Key" and name it so you know the associated system it came from and past the above crypto string (from the `cat`) as the key. The associated 
+Copy the resulting _*public*_ key `id_ed25519.pub` to your github account. It's on the [github.com](github.com) website, click your icon in the upper right and then select "Settings". On that pack select the left hand side option "SSH and GPG keys". Click the green button "New SSH Key" and name it so you know the associated system it came from and past the above crypto string (from the `cat` results starting with ssh-ed25519 above) as the key. The associated 
 `id_ed25519` is the private key that is equivalent to a password and
 should be treated with great care.
 
