@@ -2,9 +2,6 @@
 
 A short tutorial on using [ACCRE](https://www.vanderbilt.edu/accre/) aimed at Biostatistician needs. 
 
-[Vanderbilt University Medical Center](https://www.vumc.org/main/home)
-[Department of Biostatistics](https://www.vumc.org/biostatistics/vanderbilt-department-biostatistics)
-
 A short intro to [ACCRE](https://jeffreyliang-vandy.github.io/ACCRE/accre_introduction.html)
 is provided by Jeffrey Liang. This is designed to be a useable template and
 example of a recommended solution design using R. It is executable and
